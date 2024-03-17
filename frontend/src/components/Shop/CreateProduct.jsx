@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import { AiOutlineClose, AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createProduct } from "../../redux/actions/product";
@@ -47,6 +47,13 @@ const CreateProduct = () => {
       };
       reader.readAsDataURL(file);
     });
+  };
+  //Function to delete an image from the list of selected images
+  
+  const handleDeleteImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
   };
 
   const handleSubmit = (e) => {
@@ -204,7 +211,7 @@ const CreateProduct = () => {
             <label htmlFor="upload">
               <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
             </label>
-            {images &&
+            {/* {images &&
               images.map((i) => (
                 <img
                   src={i}
@@ -212,6 +219,26 @@ const CreateProduct = () => {
                   alt=""
                   className="h-[120px] w-[120px] object-cover m-2"
                 />
+              ))} */}
+          </div>
+
+          {/* Update to display delete buttons next to each image */}
+          <div className="w-full flex items-center flex-wrap">
+            {images &&
+              images.map((image, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={image}
+                    alt={`Product ${index + 1}`}
+                    className="h-[120px] w-[120px] object-cover m-2"
+                  />
+                  <button
+                    onClick={() => handleDeleteImage(index)}
+                    className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+                  >
+                    <AiOutlineClose />
+                  </button>
+                </div>
               ))}
           </div>
           <br />
