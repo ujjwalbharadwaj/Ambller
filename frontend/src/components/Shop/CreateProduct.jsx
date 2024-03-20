@@ -27,7 +27,7 @@ const CreateProduct = () => {
     }
     if (success) {
       toast.success("Product created successfully!");
-      navigate("/dashboard");
+      // navigate("/dashboard-Products");
       window.location.reload();
     }
   }, [dispatch, error, success]);
@@ -88,7 +88,7 @@ const CreateProduct = () => {
   };
 
   return (
-    <div className="w-[90%] 800px:w-[50%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
+    <div className="w-[90%] 800px:w-[50%] bg-blue-50 shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
       <h5 className="text-[30px] font-Poppins text-center">Create Product</h5>
       {/* create product form */}
       <form onSubmit={handleSubmit}>
