@@ -39,12 +39,17 @@ const ProductDetails = ({ data }) => {
   }, [data, wishlist]);
 
   const incrementCount = () => {
-    setCount(count + 1);
+    if (data.stock - 1 < count) {
+      toast.error('Product stock limited!');
+    } else {
+      setCount(prevCount => prevCount + 1);
+    }
   };
 
   const decrementCount = () => {
-    if (count > 1) {
-      setCount(count - 1);
+    if (count === 1) {}
+    else {
+      setCount(prevCount => prevCount - 1);
     }
   };
 
@@ -63,7 +68,7 @@ const ProductDetails = ({ data }) => {
     if (isItemExists) {
       toast.error("Item already in cart!");
     } else {
-      if (data.stock < 1) {
+      if (data.stock-1 < count) {
         toast.error("Product stock limited!");
       } else {
         const cartData = { ...data, qty: count };
@@ -163,7 +168,7 @@ const ProductDetails = ({ data }) => {
                   <div>
                     <button
                       className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={decrementCount}
+                      onClick={() => decrementCount(data)}
                     >
                       -
                     </button>
@@ -172,7 +177,7 @@ const ProductDetails = ({ data }) => {
                     </span>
                     <button
                       className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={incrementCount}
+                      onClick={() => incrementCount(data)}
                     >
                       +
                     </button>
