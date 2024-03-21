@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { IoBagHandleOutline } from "react-icons/io5";
 import { HiOutlineMinus, HiPlus } from "react-icons/hi";
@@ -13,6 +13,13 @@ const Cart = ({ setOpenCart }) => {
   const cartRef = useRef(null);
   const dispatch = useDispatch();
 
+  const handleCloseClick = (event) => {
+    // Check if the click target is the overlay (wishlistRef) itself
+    if (cartRef.current === event.target) {
+      setOpenCart(false);
+    }
+  };
+
   const removeFromCartHandler = (data) => {
     dispatch(removeFromCart(data));
   };
@@ -26,21 +33,13 @@ const Cart = ({ setOpenCart }) => {
     dispatch(addTocart(data));
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (cartRef.current && !cartRef.current.contains(event.target)) {
-        setOpenCart(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setOpenCart]);
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10">
+    <div 
+      ref={cartRef}
+      className="fixed top-0 left-0 w-full bg-[#0000004b] h-screen z-10"
+      onClick={handleCloseClick}
+      >
       <div
         className="fixed top-0 right-0 h-full w-[80%] 800px:w-[25%] bg-white flex flex-col overflow-y-scroll justify-between shadow-sm"
         ref={cartRef}
@@ -113,7 +112,7 @@ const CartSingle = ({ data, quantityChangeHandler, removeFromCartHandler }) => {
   const totalPrice = data.discountPrice * value;
 
   const increment = (data) => {
-    if (data.stock < value) {
+    if (data.stock-1 < value) {
       toast.error("Product stock limited!");
     } else {
       setValue(value + 1);
