@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import { toast } from "react-toastify";
 import { createevent } from "../../redux/actions/event";
@@ -9,7 +9,7 @@ import { createevent } from "../../redux/actions/event";
 const CreateEvent = () => {
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.events);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [images, setImages] = useState([]);
@@ -28,11 +28,9 @@ const CreateEvent = () => {
     const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
     setStartDate(startDate);
     setEndDate(null);
-    document.getElementById("end-date").min = minEndDate.toISOString().slice(
-      0,
-      10
-    );
-    
+    document.getElementById("end-date").min = minEndDate
+      .toISOString()
+      .slice(0, 10);
   };
 
   const handleEndDateChange = (e) => {
@@ -50,14 +48,14 @@ const CreateEvent = () => {
 
   useEffect(() => {
     if (error) {
-      console.log(error)
+      console.log(error);
       toast.error(error);
     }
     if (success) {
-      console.log(success)
-      toast.success("Event created successfully!",{
-autoClose:5000000
-      })
+      console.log(success);
+      toast.success("Event created successfully!", {
+        autoClose: 5000000,
+      });
 
       // navigate("/dashboard-events");
       window.location.reload();

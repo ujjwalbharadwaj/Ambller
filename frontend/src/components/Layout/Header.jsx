@@ -78,14 +78,6 @@ const Header = ({ activeHeading }) => {
     };
   }, []);
 
-  // window.addEventListener("scroll", () => {
-  //   if (window.scrollY > 70) {
-  //     setActive(true);
-  //   } else {
-  //     setActive(false);
-  //   }
-  // });
-
   return (
     <>
       <div className={`${styles.section}`}>
