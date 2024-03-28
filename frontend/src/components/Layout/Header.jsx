@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../styles/styles";
-import { categoriesData, productData } from "../../static/data";
+import { categoriesData } from "../../static/data";
 import {
   AiOutlineHeart,
   AiOutlineSearch,
@@ -30,6 +30,7 @@ const Header = ({ activeHeading }) => {
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
+  const searchInputRef = useRef(null);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -43,13 +44,47 @@ const Header = ({ activeHeading }) => {
     setSearchData(filteredProducts);
   };
 
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 70) {
-      setActive(true);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        open &&
+        !event.target.closest(".header-sidebar") &&
+        !event.target.closest(".search-bar")
+      ) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener("click", handleClickOutside);
     } else {
-      setActive(false);
+      document.removeEventListener("click", handleClickOutside);
     }
-  });
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [open]);
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchInputRef.current && !searchInputRef.current.contains(e.target)) {
+        setSearchData(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // window.addEventListener("scroll", () => {
+  //   if (window.scrollY > 70) {
+  //     setActive(true);
+  //   } else {
+  //     setActive(false);
+  //   }
+  // });
 
   return (
     <>
@@ -64,7 +99,7 @@ const Header = ({ activeHeading }) => {
             </Link>
           </div>
           {/* search box */}
-          <div className="w-[50%] relative">
+          <div className="w-[50%] relative"ref={searchInputRef}>
             <input
               type="text"
               placeholder="Search Product..."
@@ -246,7 +281,7 @@ const Header = ({ activeHeading }) => {
           <div
             className={`fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0`}
           >
-            <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
+            <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll header-sidebar">
               <div className="w-full justify-between flex pr-3">
                 <div>
                   <div
@@ -266,7 +301,8 @@ const Header = ({ activeHeading }) => {
                 />
               </div>
 
-              <div className="my-8 w-[92%] m-auto h-[40px relative]">
+              {/* Search bar */}
+              <div className="my-8 w-[92%] m-auto h-[40px relative]" ref={searchInputRef}>
                 <input
                   type="search"
                   placeholder="Search Product..."
@@ -274,17 +310,17 @@ const Header = ({ activeHeading }) => {
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
-                {searchData && (
+                {searchData && searchData.length > 0 && (
                   <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
                     {searchData.map((i) => {
                       const d = i.name;
 
                       const Product_name = d.replace(/\s+/g, "-");
                       return (
-                        <Link to={`/product/${Product_name}`}>
+                        <Link to={`/product/${i._id}`}>
                           <div className="flex items-center">
                             <img
-                              src={i.image_Url[0]?.url}
+                              src={i.image_Url?.[0]?.url}
                               alt=""
                               className="w-[50px] mr-2"
                             />
